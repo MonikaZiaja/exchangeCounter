@@ -1,5 +1,5 @@
 const Cash = (props) => {
-    var value = (props.cash/props.ratio).toFixed(2)
+    var value = (props.cash/props.ratio * props.price).toFixed(2)
     return(
 
         <div className ={`${props.class}`}><p className = 'currency__title'>{props.title}</p> <p> {props.cash <= 0 ? "" : value}</p> </div>
@@ -46,8 +46,8 @@ class ExchangeCounter extends React.Component {
     ],
     prices:{
         electricity: .51,
-        electricity: .51,
-        electricity: .51,
+        gas: 5.65,
+        oranges: 4.79,
     }
     
 }
@@ -58,7 +58,8 @@ class ExchangeCounter extends React.Component {
     }
     handleSelect = e => {
         this.setState({
-            product: e.target.value
+            product: e.target.value,
+            amount:"",
         })
     }
     insertSuffix(select){
@@ -67,10 +68,15 @@ class ExchangeCounter extends React.Component {
         if(select ==="oranges") return <em>kg</em>
         else return null
     }
+    selectPrice(select){
+        return this.props.prices[select]
+    }
     render(){
-        const {amount} = this.state
+        const {amount, product} = this.state
+        const price = this.selectPrice(product)
         const calculators = this.props.currencies.map(currency => (
-            <Cash class={`${currency.class}`} key = {currency.id} ratio = {currency.ratio} title = {currency.title} cash = {amount} />
+            <Cash class={`${currency.class}`} key = {currency.id} ratio = {currency.ratio} title = {currency.title} 
+            cash = {amount} price = {price}/>
         ))
         return (
             <div className = 'app'>
